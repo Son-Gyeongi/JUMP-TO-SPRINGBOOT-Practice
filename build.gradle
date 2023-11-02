@@ -17,6 +17,18 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 스프링부트 개발시 도움을 주는 도구 Spring Boot Devtools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // lombok 추가
+    implementation 'org.projectlombok:lombok:1.18.30' // 롬복 다운로드
+    annotationProcessor 'org.projectlombok:lombok:1.18.30' // 롬복 활성화
+
+    // 테스트 환경에서도 lombok 사용
+    testImplementation 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
