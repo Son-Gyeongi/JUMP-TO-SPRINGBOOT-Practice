@@ -1,8 +1,17 @@
 package com.mysite.sbb;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+// import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * JUnit은 테스트코드를 작성하고 작성한 테스트코드를
@@ -18,6 +27,10 @@ class SbbApplicationTests {
     @Autowired // 스프링의 DI 기능으로 questionRepository 객체를 스프링이 자동으로 생성
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Transactional // 메서드가 종료될 때까지 DB 세션이 유지된다.
     @Test // 테스트 메서드
     void testJpa() {
         /*
@@ -70,5 +83,55 @@ class SbbApplicationTests {
         Question q = qList.get(0);
         assertEquals("sbb가 무엇인가요?", q.getSubject());
         */
+        /*
+        // 데이터 수정
+        Optional<Question> oq = this.questionRepository.findById(1);
+        assertTrue(oq.isPresent());
+        Question q = oq.get();
+        q.setSubject("수정된 제목");
+        this.questionRepository.save(q);
+         */
+        /*
+        // 데이터 삭제하기
+        // 리포지터리의 count() 메서드는 해당 리포지터리의 총 데이터건수를 리턴
+        assertEquals(2, questionRepository.count());
+        Optional<Question> oq = this.questionRepository.findById(1);
+        assertTrue(oq.isPresent());
+        Question q = oq.get();
+        this.questionRepository.delete(q);
+        assertEquals(1, this.questionRepository.count());
+         */
+
+        // 답변 //
+        /*
+        // 답변 데이터 생성 후 저장하기
+        Optional<Question> oq = this.questionRepository.findById(2);
+        Assertions.assertTrue(oq.isPresent());
+        Question q = oq.get();
+
+        Answer a = new Answer();
+        a.setContent("네 자동으로 생성됩니다.");
+        a.setQuestion(q); // 어떤 질문의 답변인지 알기위해서 Question 객체가 필요하다.
+        a.setCreateDate(LocalDateTime.now());
+        this.answerRepository.save(a);
+         */
+        /*
+        // 답변 조회
+        Optional<Answer> oa = this.answerRepository.findById(1);
+        Assertions.assertTrue(oa.isPresent());
+        Answer a = oa.get();
+        Assertions.assertEquals(2, a.getQuestion().getId());
+         */
+
+        // 답변에 연결된 질문 찾기 vs 질문에 달린 답변 찾기
+        // 질문 객체로부터 답변 리스트를 구하는 테스트코드
+        Optional<Question> oq = this.questionRepository.findById(2);
+        assertTrue(oq.isPresent());
+        Question q = oq.get();
+
+        List<Answer> answerList = q.getAnswerList();
+
+        assertEquals(1, answerList.size());
+        assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
     }
 }
