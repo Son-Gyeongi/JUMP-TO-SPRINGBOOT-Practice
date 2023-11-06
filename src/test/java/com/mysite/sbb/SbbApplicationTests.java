@@ -1,19 +1,11 @@
 package com.mysite.sbb;
 
-import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.answer.AnswerRepository;
-import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionRepository;
-import jakarta.transaction.Transactional;
+import com.mysite.sbb.question.QuestionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +26,11 @@ class SbbApplicationTests {
     @Autowired
     private AnswerRepository answerRepository;
 
-    @Transactional // 메서드가 종료될 때까지 DB 세션이 유지된다.
+    // 대량 테스트 데이터 만들기
+    @Autowired
+    QuestionService questionService;
+
+//    @Transactional // 메서드가 종료될 때까지 DB 세션이 유지된다.
     @Test // 테스트 메서드
     void testJpa() {
         /*
@@ -129,6 +125,7 @@ class SbbApplicationTests {
 
         // 답변에 연결된 질문 찾기 vs 질문에 달린 답변 찾기
         // 질문 객체로부터 답변 리스트를 구하는 테스트코드
+        /*
         Optional<Question> oq = this.questionRepository.findById(2);
         assertTrue(oq.isPresent());
         Question q = oq.get();
@@ -137,5 +134,13 @@ class SbbApplicationTests {
 
         assertEquals(1, answerList.size());
         assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+         */
+
+        // 대량 테스트 데이터 만들기
+        for (int i = 1; i <= 300; i++) {
+            String subject = String.format("테스트 데이터입니다.:[%03d]", i);
+            String content = "내용무";
+            this.questionService.create(subject, content);
+        }
     }
 }
