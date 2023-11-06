@@ -1,11 +1,12 @@
 package com.mysite.sbb.question;
 
+import com.mysite.sbb.answer.AnswerForm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,9 +38,35 @@ public class QuestionController {
     }
 
     @GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id) {
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
         return "question_detail";
+    }
+
+    // 질문 등록하기 버튼
+    @GetMapping("/create")
+    public String questionCreate(QuestionForm questionForm) {
+        /*
+        QuestionForm과 같이 매개변수로 바인딩한 객체는 Model 객체로 전달하지 않아도 템플릿에서 사용이 가능
+         */
+        return "question_form";
+    }
+
+    /*
+    메서드명은 @GetMapping시 사용했던 questionCreate 메서드명과 동일하게 사용할 수 있다.
+    (단, 매개변수의 형태가 다른 경우에 가능하다. - 메서드 오버로딩)
+     */
+    // 질문 저장
+    @PostMapping("/create")
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+        // BindingResult매개변수는 @Valid 애너테이션으로 인해 검증이 수행된 결과를 의미하는 객체
+        if (bindingResult.hasErrors()) { // 오류가 있는 경우
+            return "question_form";
+        }
+
+        // 질문을 저장한다.
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        return "redirect:/question/list"; // 질문 저장 후 질문 목록으로 이동
     }
 }
