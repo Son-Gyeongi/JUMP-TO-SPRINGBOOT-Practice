@@ -28,7 +28,11 @@ public class SecurityConfig {
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))) // H2 콘솔의 화면 해결
                 .formLogin((formLogin) -> formLogin // 스프링 시큐리티의 로그인 설정을 담당하는 부분
                         .loginPage("/user/login") // 스프링 시큐리티에 로그인 URL을 등록
-                        .defaultSuccessUrl("/"));
+                        .defaultSuccessUrl("/"))
+                .logout((logout)->logout // 로그아웃 구현
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)); // 로그아웃시 생성된 사용자 세션도 삭제하도록 처리
 
         return http.build();
     }
