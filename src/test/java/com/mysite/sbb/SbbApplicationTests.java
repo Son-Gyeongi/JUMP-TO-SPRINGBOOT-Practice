@@ -30,8 +30,9 @@ class SbbApplicationTests {
     @Autowired
     QuestionService questionService;
 
-//    @Transactional // 메서드가 종료될 때까지 DB 세션이 유지된다.
-    @Test // 테스트 메서드
+    //    @Transactional // 메서드가 종료될 때까지 DB 세션이 유지된다.
+    @Test
+    // 테스트 메서드
     void testJpa() {
         /*
         // Save, 데이터 저장

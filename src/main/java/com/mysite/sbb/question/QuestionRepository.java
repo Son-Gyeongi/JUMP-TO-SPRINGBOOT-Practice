@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 리포지터리는 엔티티에 의해 생성된 데이터베이스 테이블에
  * 접근하는 메서드들(예: findAll, save 등)을 사용하기 위한 인터페이스
- *
+ * <p>
  * QuestionRepository를 이용하여 question테이블에 데이터를 저장하거나 조회할 수 있다.
  */
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
