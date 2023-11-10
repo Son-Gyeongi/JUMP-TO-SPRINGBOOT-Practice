@@ -2,6 +2,8 @@ package com.mysite.sbb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +25,10 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))) // CSRF 처리시 H2 콘솔은 예외로 처리 가능
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                                XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))); // H2 콘솔의 화면 해결
+                                XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))) // H2 콘솔의 화면 해결
+                .formLogin((formLogin) -> formLogin // 스프링 시큐리티의 로그인 설정을 담당하는 부분
+                        .loginPage("/user/login") // 스프링 시큐리티에 로그인 URL을 등록
+                        .defaultSuccessUrl("/"));
 
         return http.build();
     }
@@ -36,5 +41,14 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         // BCrypt 해싱 함수(BCrypt hashing function)를 사용해서 비밀번호를 암호화
         return new BCryptPasswordEncoder();
+    }
+
+    /*
+    AuthenticationManager는 사용자 인증시 앞에서 작성한 UserSecurityService와 PasswordEncoder를 사용
+     */
+    // 스프링 시큐리티의 인증을 담당
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
