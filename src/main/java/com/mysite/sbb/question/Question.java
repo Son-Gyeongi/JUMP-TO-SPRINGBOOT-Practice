@@ -1,6 +1,7 @@
 package com.mysite.sbb.question;
 
 import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,4 +40,7 @@ public class Question {
     // CascadeType.REMOVE - 질문을 삭제하면 그에 달린 답변들도 모두 함께 삭제
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    @ManyToOne // 여러개의 질문이 한 명의 사용자에게 작성
+    private SiteUser author; // 글쓴이
 }
