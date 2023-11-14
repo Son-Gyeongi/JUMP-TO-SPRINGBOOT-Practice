@@ -55,11 +55,16 @@ public class QuestionService {
         this.questionRepository.save(q);
     }
 
-    // 질문 데이터를 수정
+    // 질문 수정
     public void modify(Question question, String subject, String content) {
         question.setSubject(subject);
         question.setContent(content);
         question.setModifyDate(LocalDateTime.now());
         this.questionRepository.save(question);
+    }
+
+    // 질문 삭제
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
     }
 }

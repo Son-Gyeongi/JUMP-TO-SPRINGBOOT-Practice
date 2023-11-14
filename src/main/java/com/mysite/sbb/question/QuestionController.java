@@ -126,4 +126,22 @@ public class QuestionController {
         this.questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id); // 질문 상세 화면을 다시 호
     }
+
+    // 질문 삭제
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String questionDelete(Principal principal,
+                                 @PathVariable("id") Integer id) {
+        // URL로 전달받은 id값을 사용하여 Question 데이터를 조회한후
+        Question question = this.questionService.getQuestion(id);
+
+        // 로그인한 사용자와 질문 작성자가 동일하지 않은 경우
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        this.questionService.delete(question);
+
+        return "redirect:/"; // 질문 데이터 삭제 후에는 질문 목록 화면
+    }
 }
