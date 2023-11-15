@@ -89,4 +89,22 @@ public class AnswerController {
 
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId()); // 질문 상세 페이지
     }
+
+    // 답변 삭제
+    @PreAuthorize("isAuthenticated()") // 로그인된 사용자만 접근 가능
+    @GetMapping("/delete/{id}")
+    public String answerDelete(Principal principal, // 로그인한 유저 정보
+                               @PathVariable("id") Integer id // 경로상에 id 가져오기
+    ) {
+        Answer answer = this.answerSrevice.getAnswer(id);
+
+        if (!answer.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+
+        this.answerSrevice.delete(answer);
+
+        // 질문상세 화면으로 리다이렉트
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
 }
