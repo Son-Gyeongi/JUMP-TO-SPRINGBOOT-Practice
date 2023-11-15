@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 // 엔티티는 데이터베이스 테이블과 매핑되는 자바 클래스
 @Getter
@@ -29,4 +30,7 @@ public class Answer {
     private SiteUser author; // 글쓴이
 
     private LocalDateTime modifyDate; // 수정 일시
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }
