@@ -32,5 +32,5 @@ public class Answer {
     private LocalDateTime modifyDate; // 수정 일시
 
     @ManyToMany
-    Set<SiteUser> voter;
+    Set<SiteUser> voter; // 추천인
 }

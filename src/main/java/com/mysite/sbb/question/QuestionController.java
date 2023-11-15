@@ -144,4 +144,15 @@ public class QuestionController {
 
         return "redirect:/"; // 질문 데이터 삭제 후에는 질문 목록 화면
     }
+
+    // 추천인 저장
+    // 추천은 로그인한 사람만 가능해야 하므로 @PreAuthorize("isAuthenticated()") 애너테이션이 적용
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+        Question question = this.questionService.getQuestion(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.questionService.vote(question, siteUser);
+        return String.format("redirect:/question/detail/%s", id); // 오류가 없다면 질문 상세화면으로 리다이렉트
+    }
 }
