@@ -107,4 +107,15 @@ public class AnswerController {
         // 질문상세 화면으로 리다이렉트
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
+
+    // 추천인 저장
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerSrevice.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerSrevice.vote(answer, siteUser);
+        // 질문 상세화면으로 리다이렉트
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
 }
