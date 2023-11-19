@@ -49,8 +49,8 @@ public class AnswerController {
         }
 
         // 답변을 저장한다.
-        this.answerSrevice.create(question, answerForm.getContent(), siteUser);
-        return String.format("redirect:/question/detail/%s", id);
+        Answer answer = this.answerSrevice.create(question, answerForm.getContent(), siteUser);
+        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -87,7 +87,8 @@ public class AnswerController {
 
         this.answerSrevice.modify(answer, answerForm.getContent());
 
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId()); // 질문 상세 페이지
+        // 질문 상세 페이지로 이동
+        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
 
     // 답변 삭제
@@ -116,6 +117,6 @@ public class AnswerController {
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.answerSrevice.vote(answer, siteUser);
         // 질문 상세화면으로 리다이렉트
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
 }
