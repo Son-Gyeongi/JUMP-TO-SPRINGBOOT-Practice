@@ -37,11 +37,13 @@ public class QuestionController {
 
     // 데이터 조회하여 템플릿에 전달하기
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
         // Model 객체는 자바 클래스와 템플릿 간의 연결고리 역할
 
-        Page<Question> paging = this.questionService.getList(page);
+        Page<Question> paging = this.questionService.getList(page, kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw); // 화면에서 입력한 검색어를 화면에 유지하기 위해
         return "question_list";
     }
 
